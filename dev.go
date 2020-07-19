@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/knieriem/can"
-
 	"github.com/knieriem/mcp2515/spiproto"
 )
 
