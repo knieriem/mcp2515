@@ -26,15 +26,22 @@ func (d *Dev) Init() error {
 		return err
 	}
 	time.Sleep(30 * time.Millisecond)
+
+	// Setup bit timing.
 	err = d.p.Write(spiproto.CNF3, []byte{0x01, 0xB5, 00}) // 500k
 	//	err = d.p.Write(spiproto.CNF3, []byte{0x01, 0x91, 0x40}) 	// 1000k
 	if err != nil {
 		return err
 	}
+
+	// Enable filters, and rollover: If RXB0 is full,
+	// next arriving message will be written to RXB1.
 	err = d.p.BitModify(spiproto.RXB0CTRL, spiproto.RXMMask|spiproto.BUKT, spiproto.BUKT)
 	if err != nil {
 		return err
 	}
+
+	// Set mask 0 to zero (allow any message)
 	err = d.p.Write(spiproto.RXM0SIDH, []byte{0})
 	if err != nil {
 		return err
@@ -48,10 +55,15 @@ func (d *Dev) Init() error {
 		return err
 	}
 
-	err = d.p.BitModify(0x2b, 3, 3)
+	// Enable receive interrupts for both buffers; this most likely
+	// stems from an experiment, and should be removed,
+	// or turned into an option.
+	err = d.p.BitModify(spiproto.CANINTE, spiproto.RX1IE|spiproto.RX0IE, spiproto.RX1IE|spiproto.RX0IE)
 	if err != nil {
 		return err
 	}
+
+	// Set normal operation mode.
 	err = d.p.BitModify(spiproto.CANCTRL, spiproto.REQOPMask, spiproto.REQOPNormal)
 	if err != nil {
 		return err

@@ -120,6 +120,8 @@ const (
 	CNF3    Addr = 0x28
 	CNF2    Addr = 0x29
 	CNF1    Addr = 0x2A
+	CANINTE Addr = 0x2B
+	CANINTF Addr = 0x2C
 	EFLG    Addr = 0x2D
 	CANCTRL Addr = 0x2F
 
@@ -153,6 +155,10 @@ const (
 	// TXBnSIDL
 	EXIDE       = 1 << 3
 	SIDLStdMask = 7<<5 | EXIDE
+
+	// CANINTE
+	RX1IE = 1 << 1
+	RX0IE = 1 << 0
 )
 
 func (d *Proto) BitModify(a Addr, mask, data byte) error {
