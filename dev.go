@@ -11,13 +11,38 @@ import (
 type Dev struct {
 	p        *spiproto.Proto
 	availRx1 bool
+
+	bitrate struct {
+		cnf1 uint8
+		cnf2 uint8
+		cnf3 uint8
+	}
 }
 
-func NewDevice(c spiproto.Conn) *Dev {
+func NewDevice(c spiproto.Conn, options ...Option) *Dev {
 	p := spiproto.New(c)
 	d := new(Dev)
 	d.p = p
+
+	// use default bitrate settings for 500k @16MHz (sample point 87.5%)
+	d.bitrate.cnf1 = 0
+	d.bitrate.cnf2 = 0xb5
+	d.bitrate.cnf3 = 1
+
+	for _, o := range options {
+		o(d)
+	}
 	return d
+}
+
+type Option func(*Dev)
+
+func WithBitrateConfRegs(cnf1, cnf2, cnf3 uint8) Option {
+	return func(d *Dev) {
+		d.bitrate.cnf1 = cnf1
+		d.bitrate.cnf2 = cnf2
+		d.bitrate.cnf3 = cnf3
+	}
 }
 
 func (d *Dev) Init() error {
@@ -28,8 +53,8 @@ func (d *Dev) Init() error {
 	time.Sleep(30 * time.Millisecond)
 
 	// Setup bit timing.
-	err = d.p.Write(spiproto.CNF3, []byte{0x01, 0xB5, 00}) // 500k
-	//	err = d.p.Write(spiproto.CNF3, []byte{0x01, 0x91, 0x40}) 	// 1000k
+	bc := &d.bitrate
+	err = d.p.Write(spiproto.CNF3, []byte{bc.cnf3, bc.cnf2, bc.cnf1})
 	if err != nil {
 		return err
 	}
