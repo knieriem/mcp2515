@@ -1,0 +1,5 @@
+github.com/knieriem/can v0.1.0 h1:PHDft7ZcuQ6uRrPNeSe6A3NwkEDKMbC+ZlJCK1GIFXc=
+github.com/knieriem/can v0.1.0/go.mod h1:3D8LWGlyroqPO1D9Wq9s6uVtix+OasUI+Adc/uwEoik=
+github.com/knieriem/g v0.1.0/go.mod h1:Cxrkopw+HrVRIxTQzwKvLf0zImHa1q6L0RUElAh3a9k=
+github.com/knieriem/text v0.1.0/go.mod h1:wmcypC3FdJ4mBqO0DPLbTX7QxB4+n9oOU+3QektAZzs=
+github.com/knieriem/tool v0.0.0-20160811200059-f4b909d55828/go.mod h1:7FK8IPV+NQPUF3ZQOMmJjtnhkVnq5gaF4kXzRMknwwE=
