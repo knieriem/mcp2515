@@ -192,5 +192,9 @@ func (d *Proto) runCmd(instr uint8, a Addr, tx []byte, nrx int) error {
 		n += nzero
 	}
 	b = b[:n]
-	return d.conn.TxRx(b, b)
+	brx := b
+	if nrx == 0 {
+		brx = nil
+	}
+	return d.conn.TxRx(b, brx)
 }
